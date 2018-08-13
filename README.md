@@ -5,9 +5,9 @@ export PIVNET_AUTH_TOKEN=<auth token availabel on network.pivotal.io account>
 
 ### Download Greenplum binaries from PivNet
 The download.sh script downloads the following files from PivNet
-* greenplum-db-5.4.1-rhel6-x86_64.zip
+* greenplum-db-5.10.2-rhel6-x86_64.zip
 * DataSciencePython-1.1.1-gp5-rhel6-x86_64.gppkg
-* madlib-1.13-gp5-rhel6-x86_64.tar.gz
+* madlib-1.14-gp5-rhel6-x86_64.tar.gz
 * postgis-2.1.5-gp5-rhel6-x86_64.gppkg
 ```bash
 cd docker-gpdb/pivotal

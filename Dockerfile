@@ -3,9 +3,9 @@ FROM centos:6.7
 
 COPY * /tmp/
 
-ARG GPDB_INSTALLER="greenplum-db-5.4.1-rhel6-x86_64"
+ARG GPDB_INSTALLER="greenplum-db-5.10.2-rhel6-x86_64"
 ARG DATA_SCIENCE_PYTHON_INSTALLER="DataSciencePython-1.1.1-gp5-rhel6-x86_64"
-ARG MADLIB_INSTALLER="madlib-1.13-gp5-rhel6-x86_64"
+ARG MADLIB_INSTALLER="madlib-1.14-gp5-rhel6-x86_64"
 ARG POSTGIS_INSTALLER="postgis-2.1.5-gp5-rhel6-x86_64"
 
 ARG SCRIPTS_DIR="/tmp/"
