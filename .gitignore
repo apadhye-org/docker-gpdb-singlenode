@@ -1,0 +1,6 @@
+.DS_Store
+**/.idea/
+.pairs
+**/__pycache__
+pivotal/*
+!pivotal/download.sh
