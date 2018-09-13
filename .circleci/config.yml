@@ -50,4 +50,6 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker tag gpdb-singlenode:vanilla ${DOCKER_HUB_USERNAME}/gpdb-singlenode:${GPDB_VERSION}
               docker tag gpdb-singlenode:ds ${DOCKER_HUB_USERNAME}/gpdb-singlenode:${GPDB_VERSION}-ds
+              docker push ${DOCKER_HUB_USERNAME}/gpdb-singlenode:${GPDB_VERSION}
+              docker push ${DOCKER_HUB_USERNAME}/gpdb-singlenode:${GPDB_VERSION}-ds
             fi

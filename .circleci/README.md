@@ -23,19 +23,19 @@ circleci local execute -e PIVNET_AUTH_TOKEN=$PIVNET_AUTH_TOKEN \
 ### Deploy to CircleCI cloud
 Add Secrets to Circle CI (As env variables)  
 Use the Environment Variables page of the Build > Project > Settings in the CircleCI application.
-Test Build without push to docker hub
+Commit to kickoff build
+
 
 
 # ToDo:
-Derive appropriate Gpdb version from GPDB_INSTALLER
-Deploy to CircleCI cloud
-Show a way to pull and build your own image local using - circle ci local
-Restricted access to gcloud service account.
-Cleaner way to source release information in circleci
-Docs for how to use the images
+* Show a way to pull and build your own image local using - circle ci local
+* Docs for how to use the images
  vanilla - su - gadmin / psql
  ds - Install madlib/postgis on database.
-Use just one dockerfile instead of two to build the images - tagging intermediate containers
+
+* Cleaner way to source release information in circleci
+* Derive appropriate Gpdb version from GPDB_INSTALLER
+* Use just one dockerfile instead of two to build the images - tagging intermediate containers
 
 
 
