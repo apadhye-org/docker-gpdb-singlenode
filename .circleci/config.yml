@@ -10,39 +10,44 @@ jobs:
       - run:
           name: Check env variables
           command: |
-            echo $PIVNET_AUTH_TOKEN
-            echo $GCLOUD_SERVICE_KEY
-            echo $GOOGLE_PROJECT_ID
-            echo $GOOGLE_PROJECT_ID
+            source release.sh
+            echo $GPDB_VERSION
       - run:
           name: Install os dependencies
           command: |
-            apk add bash wget curl python
+            apk add wget
       - run:
-          name: Install gcloud
-          command:
-            curl -sSL https://sdk.cloud.google.com > /tmp/gcl && bash /tmp/gcl --install-dir=~/gcloud --disable-prompts
-#      - run:
-#          name: Download binaries
-#          command: |
-#            cd pivotal && sh download.sh
-      - run:
-          name: Build application Docker image
+          name: Download binaries
           command: |
-            docker build -t app .
+            source release.sh
+            cd pivotal && sh download.sh
       - run:
-          name: Store Service Account
+          name: Build greenplum vanilla Docker image
           command: |
-            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-            cat ${HOME}/gcloud-service-key.json
+            source release.sh
+            docker build -f Dockerfile -t gpdb-singlenode:vanilla . \
+              --build-arg GPDB_INSTALLER=${GPDB_INSTALLER} \
+              --build-arg DATA_SCIENCE_PYTHON_INSTALLER=${DATA_SCIENCE_PYTHON_INSTALLER} \
+              --build-arg MADLIB_INSTALLER=${MADLIB_INSTALLER} \
+              --build-arg POSTGIS_INSTALLER=${POSTGIS_INSTALLER}
+      - run:
+          name: Build greenplum data-science Docker image
+          command: |
+            source release.sh
+            docker build -f Dockerfile-ds -t gpdb-singlenode:ds . \
+              --build-arg GPDB_INSTALLER=${GPDB_INSTALLER} \
+              --build-arg DATA_SCIENCE_PYTHON_INSTALLER=${DATA_SCIENCE_PYTHON_INSTALLER} \
+              --build-arg MADLIB_INSTALLER=${MADLIB_INSTALLER} \
+              --build-arg POSTGIS_INSTALLER=${POSTGIS_INSTALLER}
+      - run:
+          name: Docker Hub Login
+          command: |
+            docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
       - deploy:
-          name: Push application Docker image
+          name: Tag and Push greenplum Docker images
           command: |
+            source release.sh
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              /root/gcloud/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-              /root/gcloud/google-cloud-sdk/bin/gcloud config set project $GOOGLE_PROJECT_ID
-              /root/gcloud/google-cloud-sdk/bin/gcloud config set compute/zone $GOOGLE_COMPUTE_ZONE
-              docker login -u _json_key --password-stdin https://gcr.io < ${HOME}/gcloud-service-key.json
-              docker tag app ${GCR_ENDPOINT}/${GOOGLE_PROJECT_ID}/app:latest
-              docker push ${GCR_ENDPOINT}/${GOOGLE_PROJECT_ID}/app:latest
+              docker tag gpdb-singlenode:vanilla ${DOCKER_HUB_USERNAME}/gpdb-singlenode:${GPDB_VERSION}
+              docker tag gpdb-singlenode:ds ${DOCKER_HUB_USERNAME}/gpdb-singlenode:${GPDB_VERSION}-ds
             fi
